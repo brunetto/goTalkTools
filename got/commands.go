@@ -30,12 +30,13 @@ var VersionCmd = &cobra.Command{
 
 var (
 	presentationName string
+	templateName string
 )
 
 var PrepareCmd = &cobra.Command{
 	Use:   "prepare",
 	Short: "Prepare a new folder from template to start a presentation",
-	Long:  `Download the beamer template and rename the folder according to the 
+	Long:  `Create or prepare the beamer template and create the folder according to the 
 provided name for the presentation provided with the -p flag.
 It would be good that the name is in the form:
 
@@ -46,7 +47,7 @@ for example:
 2000-01-01-Venice-New_Years_Eve
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		Prepare(presentationName)
+		Prepare(presentationName, templateName)
 	},
 }
 
@@ -66,7 +67,7 @@ var CompileCmd = &cobra.Command{
 The .tex file must be in the form of the template downloaded 
 running gotalk prepare -p <name>.
 
-Run with the -t flag if your presentation has a name different from that of the folder.
+Run with the -t flag if your main presentation has a name different from that of the <you>+folder.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		Compile(texName)
@@ -98,6 +99,7 @@ func InitCommands() () {
 	
 	GoTalkCmd.AddCommand(PrepareCmd)
 	PrepareCmd.Flags().StringVarP(&presentationName, "presentation", "p", "", "Name of the presentation.")
+	PrepareCmd.Flags().StringVarP(&templateName, "template", "t", "", "Name of the template.")
 	
 	GoTalkCmd.AddCommand(CompileCmd)
 	CompileCmd.Flags().StringVarP(&texName, "texName", "t", "", "Name of the .tex file.")
