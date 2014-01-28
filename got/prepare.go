@@ -2,6 +2,8 @@ package got
 
 import (
 	"fmt"
+	"io"
+	"net/http"
 	"log"
 	"os"
 	"os/exec"
@@ -18,7 +20,12 @@ func Prepare (presentationName string, templateName string) () {
 		err error
 		folderName string
 		outFileName string
+		outFile *os.File
+		response *http.Response
+		writtenBytes int64
 	)
+	
+	const url = `http://brunettoziosi.eu/files/colors.tex`
 	
 	tGlob0 := time.Now()
 	
@@ -38,20 +45,28 @@ func Prepare (presentationName string, templateName string) () {
 		log.Fatal("Can't create folder ", err)
 	}
 	
-	cmd := exec.Command("ls")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Run()
-	
 	if templateName == "" {
 		fmt.Println("")
-		log.Println("Download template with")
-		fmt.Println("wget", "http://brunettoziosi.eu/files/colors.tex", "-O " + outFileName)
+		log.Println("Download template")
 		fmt.Println("")
-		cmd := exec.Command("wget", "http://brunettoziosi.eu/files/colors.tex", "-O " + outFileName)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Run()
+
+		// from https://github.com/thbar/golang-playground/blob/master/download-files.go
+		if outFile, err = os.Create(outFileName); err != nil {
+			log.Fatal("Error while creating", outFileName, "-", err)
+        }
+        defer outFile.Close()
+		
+		if response, err = http.Get(url); err != nil {
+            log.Fatal("Error while downloading", url, "-", err)
+        }
+        defer response.Body.Close()
+		
+		if writtenBytes, err = io.Copy(outFile, response.Body); err != nil {
+            log.Fatal("Error while downloading", url, "-", err)
+        }
+        
+        log.Println("Downloaded ", writtenBytes, " bytes template")
+		
 	} else {
 		log.Println("Coping the template")
 		

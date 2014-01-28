@@ -29,11 +29,15 @@ func Compile (texName string) () {
 		sharableWriter *bufio.Writer
 		sharableName string
 		line string
-		note1 string
-		note2 string
-		note3 string
 		appendixSection bool = false
 		extension string
+	)
+	
+	const (
+		note1 = `\setbeameroption{show notes}`
+		note2 = `\usepackage{pgfpages}`
+		note3 = `\pgfpagesuselayout{8 on 1}[a4paper]%, landscape]`
+		
 	)
 	
 	tGlob0 := time.Now()
@@ -65,15 +69,12 @@ func Compile (texName string) () {
 
 	if sharableFile, err = os.Create(sharableName); err != nil {log.Fatal(err)}
 	defer sharableFile.Close()
+	
 	sharableWriter = bufio.NewWriter(sharableFile)
 	
 	log.Println("Preparing contents")
 	
 	// Strings for handouts check
-	
-	note1 = `\setbeameroption{show notes}`
-	note2 = `\usepackage{pgfpages}`
-	note3 = `\pgfpagesuselayout{8 on 1}[a4paper]%, landscape]`
 
 	// Read the presentation .tex file and copy it to the handout and sharable version 
 	for {
@@ -89,21 +90,36 @@ func Compile (texName string) () {
 		// Handouts activation?
 		if strings.Contains(line, note1) || strings.Contains(line, note2) || strings.Contains(line, note3) {
 			if _, err = handoutsWriter.WriteString(strings.TrimLeft(line, "%") + "\n"); err != nil {log.Fatal(err)}
+			if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
 		} else {
 			if _, err = handoutsWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
+			if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
 		}
 		
 		// Are we in the appendix?
 		if !appendixSection {
 			// If appendixSection is false, check if we arrived there
 			appendixSection = strings.Contains(line, `\appendix`)
-			if _, err = sharableWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
+			if !appendixSection {
+				if _, err = sharableWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
+				if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
+			} else {
+				if _, err = sharableWriter.WriteString(`\end{document}` + "\n"); err != nil {log.Fatal(err)}
+				if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
+			}
 		} else {
 			// We already are in the appendix and appendixSection is true
 			// and we don't want it to change in false again
 		}
-		
+		/*
+		if _, err = handoutsWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
+		if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
+		if _, err = sharableWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
+		if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
+		*/
 	}
+
+	
 	
 	// Compile .tex files
 	// Presentation one
