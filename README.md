@@ -2,10 +2,11 @@ goTalkTools
 ===========
 
 Simple and raw tool to prepare and manage a beamer presentation from a template with go(lang). 
-It produces  as output three different presentation:
-1 - normal presentation with appendix
-2 - presentation without appendix for sharing
-3 - handout notes
+It produces  as output three different presentation:    
+
+1. - normal presentation with appendix
+2. - presentation without appendix for sharing
+3. - handout notes
 It also copy the sharable presentation to the (assumed) publicfolder for upload.
 
 
