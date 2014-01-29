@@ -66,11 +66,13 @@ func Compile (texName string) () {
 	if handoutsFile, err = os.Create(handoutsName); err != nil {log.Fatal(err)}
 	defer handoutsFile.Close()
 	handoutsWriter = bufio.NewWriter(handoutsFile)
+	defer handoutsWriter.Flush()
 
 	if sharableFile, err = os.Create(sharableName); err != nil {log.Fatal(err)}
 	defer sharableFile.Close()
 	
 	sharableWriter = bufio.NewWriter(sharableFile)
+	defer sharableWriter.Flush()
 	
 	log.Println("Preparing contents")
 	
@@ -90,10 +92,10 @@ func Compile (texName string) () {
 		// Handouts activation?
 		if strings.Contains(line, note1) || strings.Contains(line, note2) || strings.Contains(line, note3) {
 			if _, err = handoutsWriter.WriteString(strings.TrimLeft(line, "%") + "\n"); err != nil {log.Fatal(err)}
-			if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
+// 			if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
 		} else {
 			if _, err = handoutsWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
-			if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
+// 			if err = handoutsWriter.Flush(); err != nil {log.Fatal(err)}
 		}
 		
 		// Are we in the appendix?
@@ -102,10 +104,10 @@ func Compile (texName string) () {
 			appendixSection = strings.Contains(line, `\appendix`)
 			if !appendixSection {
 				if _, err = sharableWriter.WriteString(line + "\n"); err != nil {log.Fatal(err)}
-				if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
+// 				if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
 			} else {
 				if _, err = sharableWriter.WriteString(`\end{document}` + "\n"); err != nil {log.Fatal(err)}
-				if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
+// 				if err = sharableWriter.Flush(); err != nil {log.Fatal(err)}
 			}
 		} else {
 			// We already are in the appendix and appendixSection is true
