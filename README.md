@@ -11,7 +11,9 @@ It also copy the sharable presentation to the (assumed) publicfolder for upload.
 
 Note: .tex file is assumed to be in the provided template format
 
-### Usage 
+### Usage    
+
+````bash
   gotalk
   gotalk [command]
 
@@ -24,3 +26,4 @@ Available Commands:
 
 
 Use "gotalk help [command]" for more information about that command.
+````
