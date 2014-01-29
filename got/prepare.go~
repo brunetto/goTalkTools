@@ -23,7 +23,6 @@ func Prepare (presentationName string, templateName string) () {
 		outFile *os.File
 		response *http.Response
 		writtenBytes int64
-		copied int 64
 	)
 	
 	const url = `http://brunettoziosi.eu/files/beamerTmpl.tex`
@@ -75,10 +74,10 @@ func Prepare (presentationName string, templateName string) () {
 // 		cmd.Stdout = os.Stdout
 // 		cmd.Stderr = os.Stderr
 // 		cmd.Run()
-		if copied, err = CopyFile(templateName, outFileName); err != nil {
+		if writtenBytes, err = CopyFile(templateName, outFileName); err != nil {
 			log.Fatal("Can't copy ", templateName, " to ", outFileName, " with error ", err)
 		} else {
-			log.Println("Copies ", copied, " bytes")
+			log.Println("Copies ", writtenBytes, " bytes")
 		}
 	}
 	

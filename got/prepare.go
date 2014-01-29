@@ -47,7 +47,7 @@ func Prepare (presentationName string, templateName string) () {
 	
 	if templateName == "" {
 		fmt.Println("")
-		log.Println("Download template")
+		log.Println("Download template from ", url)
 		fmt.Println("")
 
 		// from https://github.com/thbar/golang-playground/blob/master/download-files.go
