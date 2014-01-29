@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./got"
+	"github.com/brunetto/gotalk/got"
 	"fmt"
 	"log"
 	"time"

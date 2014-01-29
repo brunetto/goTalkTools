@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"log"
 	"os"
-	"os/exec"
+// 	"os/exec"
 	"os/user"
 	"path/filepath"
 	"time"
@@ -25,7 +25,7 @@ func Prepare (presentationName string, templateName string) () {
 		writtenBytes int64
 	)
 	
-	const url = `http://brunettoziosi.eu/files/colors.tex`
+	const url = `http://brunettoziosi.eu/files/beamerTmpl.tex`
 	
 	tGlob0 := time.Now()
 	
@@ -70,10 +70,15 @@ func Prepare (presentationName string, templateName string) () {
 	} else {
 		log.Println("Coping the template")
 		
-		cmd := exec.Command("cp", templateName, outFileName)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Run()
+// 		cmd := exec.Command("cp", templateName, outFileName)
+// 		cmd.Stdout = os.Stdout
+// 		cmd.Stderr = os.Stderr
+// 		cmd.Run()
+		if writtenBytes, err = CopyFile(templateName, outFileName); err != nil {
+			log.Fatal("Can't copy ", templateName, " to ", outFileName, " with error ", err)
+		} else {
+			log.Println("Copies ", writtenBytes, " bytes")
+		}
 	}
 	
 	tGlob1 := time.Now()

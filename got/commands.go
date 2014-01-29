@@ -77,6 +77,7 @@ Run with the -t flag if your main presentation has a name different from that of
 
 var (
 	publishFolder string
+	pdfName string
 )
 
 var PublishCmd = &cobra.Command{
@@ -89,7 +90,7 @@ var PublishCmd = &cobra.Command{
 	(not available at the moment)
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		Publish(publishFolder)
+		Publish(publishFolder, texName)
 	},
 }
 
@@ -106,6 +107,7 @@ func InitCommands() () {
 	
 	GoTalkCmd.AddCommand(PublishCmd)
 	PublishCmd.Flags().StringVarP(&publishFolder, "folder", "f", "", "Folder for the public version of the presentations.")
+	CompileCmd.Flags().StringVarP(&pdfName, "pdfName", "p", "", "Name of the .pdf file.")
 	
 	
 }
